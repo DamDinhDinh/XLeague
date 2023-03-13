@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_host"
+    app:startDestination="@id/TeamListingFragment">
+
+    <fragment
+        android:id="@+id/TeamListingFragment"
+        android:name="com.dinhdd.xleague.presenter.team_listing_screen.TeamListingFragment"
+        android:label="TeamListingFragment" />
+
+</navigation>
