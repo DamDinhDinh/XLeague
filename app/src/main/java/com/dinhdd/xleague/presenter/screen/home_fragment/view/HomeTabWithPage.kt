@@ -25,7 +25,6 @@ fun HomeTabWithPage(
             onClick = { index -> onPageChanged(detailPages[index]) }
         )
         Spacer(modifier = Modifier.size(18.dp))
-        selectedPage.content()
     }
 
 }
