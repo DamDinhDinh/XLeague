@@ -3,7 +3,7 @@ package com.dinhdd.data.remote.model.get_all_matches_of_team
 
 import com.google.gson.annotations.SerializedName
 
-data class Previou(
+data class PreviouJson(
     @SerializedName("date")
     val date: String? = null,
     @SerializedName("description")

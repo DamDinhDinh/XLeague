@@ -11,7 +11,7 @@ import javax.inject.Inject
 class TeamRepository @Inject constructor(private val teamServices: TeamServices) : TeamDataSource {
     override suspend fun getAllTeams(): Flow<List<Team>> = flow {
         emit(
-            teamServices.getAllTeams().teams?.map {
+            teamServices.getAllTeams().teamJsons?.map {
                 it.toDomain()
             }.orEmpty()
         )

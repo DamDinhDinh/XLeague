@@ -1,9 +1,9 @@
-package com.dinhdd.data.remote.model.get_all_matches_of_team
+package com.dinhdd.data.remote.model.get_all_matches
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Upcoming(
+data class UpcomingJson(
     @SerializedName("date")
     val date: String? = null,
     @SerializedName("description")

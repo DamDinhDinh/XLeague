@@ -13,11 +13,11 @@ class MatchRepository @Inject constructor(private val matchServices: MatchServic
 
     override suspend fun getAllMatches(): Flow<List<Match>> = flow {
         emit(
-            matchServices.getAllMatches().matches?.let { matches ->
+            matchServices.getAllMatches().matchesJson?.let { matches ->
                 val previousMatches = matches.previous?.map {
                     it.toDomain()
                 }.orEmpty()
-                val upcomingMatches = matches.upcoming?.map {
+                val upcomingMatches = matches.upcomingJson?.map {
                     it.toDomain()
                 }.orEmpty()
                 previousMatches + upcomingMatches
@@ -27,11 +27,11 @@ class MatchRepository @Inject constructor(private val matchServices: MatchServic
 
     override suspend fun getMatchesOfTeam(teamId: String): Flow<List<Match>> = flow {
         emit(
-            matchServices.getAllMatchesOfTeam(teamId).matches?.let { matches ->
+            matchServices.getAllMatchesOfTeam(teamId).matchesJson?.let { matches ->
                 val previousMatches = matches.previous?.map {
                     it.toDomain()
                 }.orEmpty()
-                val upcomingMatches = matches.upcoming?.map {
+                val upcomingMatches = matches.upcomingJson?.map {
                     it.toDomain()
                 }.orEmpty()
                 previousMatches + upcomingMatches

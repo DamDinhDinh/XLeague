@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class GetAllMatchesResponse(
     @SerializedName("matches")
-    val matches: Matches? = null
+    val matchesJson: MatchesJson? = null
 )

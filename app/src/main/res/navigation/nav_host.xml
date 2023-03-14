@@ -2,11 +2,38 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_host"
-    app:startDestination="@id/TeamListingFragment">
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.dinhdd.xleague.presenter.screen.home_fragment.HomeFragment"
+        android:label="HomeFragment" />
+
+    <fragment
+        android:id="@+id/MatchListingFragment"
+        android:name="com.dinhdd.xleague.presenter.screen.match_listing.MatchListingFragment"
+        android:label="MatchListingFragment" />
 
     <fragment
         android:id="@+id/TeamListingFragment"
-        android:name="com.dinhdd.xleague.presenter.team_listing_screen.TeamListingFragment"
-        android:label="TeamListingFragment" />
+        android:name="com.dinhdd.xleague.presenter.screen.team_listing.TeamListingFragment"
+        android:label="TeamListingFragment">
+
+        <action
+            android:id="@+id/TeamListingFragmentToMatchesOfTeamFragment"
+            app:destination="@id/MatchesOfTeamFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/MatchesOfTeamFragment"
+        android:name="com.dinhdd.xleague.presenter.screen.matches_of_team.MatchesOfTeamFragment"
+        android:label="MatchesOfTeamFragment">
+
+        <argument
+            android:name="teamId"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>

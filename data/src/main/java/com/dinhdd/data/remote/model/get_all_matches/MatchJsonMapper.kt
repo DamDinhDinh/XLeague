@@ -1,8 +1,8 @@
-package com.dinhdd.data.remote.model.get_all_matches_of_team
+package com.dinhdd.data.remote.model.get_all_matches
 
 import com.dinhdd.domain.model.Match
 
-fun Previou?.toDomain() = if (this != null) {
+fun PreviouJson?.toDomain() = if (this != null) {
     Match(
         date = date.orEmpty(),
         description = description.orEmpty(),
@@ -22,7 +22,7 @@ fun Previou?.toDomain() = if (this != null) {
     matchType = Match.MatchType.Unknown
 )
 
-fun Upcoming?.toDomain() = if (this != null) Match(
+fun UpcomingJson?.toDomain() = if (this != null) Match(
     date = date.orEmpty(),
     description = description.orEmpty(),
     homeTeam = home.orEmpty(),
