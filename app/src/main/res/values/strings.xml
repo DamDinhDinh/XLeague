@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">XLeague</string>
+    <string name="all_team_screen_title">All Team</string>
+    <string name="all_match_screen_title">All Match</string>
+    <string name="match_row_date">Date:</string>
+    <string name="match_row_description">Description:</string>
+    <string name="match_row_home_team">Home Team:</string>
+    <string name="match_row_away_team">Away Team:</string>
+    <string name="match_row_winner_team">Winner Team:</string>
 </resources>
