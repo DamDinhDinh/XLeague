@@ -1,21 +1,18 @@
-package com.dinhdd.xleague.test_rule
+package com.dinhdd.xleague.test_base
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.*
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 @ExperimentalCoroutinesApi
-class MainCoroutineRule(private val dispatcher: TestDispatcher = UnconfinedTestDispatcher()) :
+class MainCoroutineRule(val testDispatcher: TestDispatcher = TestCoroutineDispatcher()) :
     TestWatcher() {
 
     override fun starting(description: Description) {
         super.starting(description)
-        Dispatchers.setMain(dispatcher)
+        Dispatchers.setMain(testDispatcher)
     }
 
     override fun finished(description: Description) {

@@ -6,13 +6,21 @@ import java.util.*
 const val MATCH_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
 fun String.stringToDate(pattern: String?): Date? {
-    val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
-    return simpleDateFormat.parse(this)
+    return try {
+        val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
+        simpleDateFormat.parse(this)
+    } catch (e: Exception) {
+        null
+    }
 }
 
 fun Date.dateToString(pattern: String?): String? {
-    val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
-    return simpleDateFormat.format(this)
+    return try {
+        val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
+        simpleDateFormat.format(this)
+    } catch (e: Exception) {
+        null
+    }
 }
 
 fun String.getDateOfMatch(): String {

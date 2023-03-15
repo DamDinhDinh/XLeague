@@ -3,10 +3,12 @@ package com.dinhdd.xleague
 import app.cash.turbine.test
 import com.dinhdd.domain.model.Team
 import com.dinhdd.domain.usecase.GetAllTeamsUseCase
+import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.model.TeamPresent
 import com.dinhdd.xleague.presenter.screen.team_listing.TeamListingContract
 import com.dinhdd.xleague.presenter.screen.team_listing.TeamListingViewModel
-import com.dinhdd.xleague.test_rule.MainCoroutineRule
+import com.dinhdd.xleague.test_base.MainCoroutineRule
+import com.dinhdd.xleague.test_base.TestDispatcherProvider
 import io.github.serpro69.kfaker.Faker
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -24,16 +26,20 @@ class TeamListingViewModelTest {
     @Mock
     lateinit var getAllTeamsUseCase: GetAllTeamsUseCase
 
+    private lateinit var dispatcherProvider: DispatcherProvider
+
     @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutinesRule = MainCoroutineRule()
 
     lateinit var faker: Faker
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
         faker = Faker()
+        dispatcherProvider = TestDispatcherProvider()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -47,12 +53,11 @@ class TeamListingViewModelTest {
 
         given(getAllTeamsUseCase()).willReturn(flow { emit(givenTeams) })
 
-        val viewModel = TeamListingViewModel(getAllTeamsUseCase)
+        val viewModel = TeamListingViewModel(getAllTeamsUseCase, dispatcherProvider)
         viewModel.fetchAllTeams()
 
-        viewModel.observeViewState().test {
-            assertEquals(givenTeams.size, awaitItem()!!.teams.size)
-        }
+        val result = viewModel.observeViewState().value
+        assertEquals(givenTeams.size, result?.teams?.size)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -60,7 +65,7 @@ class TeamListingViewModelTest {
     fun onTeamClickThenObserveNavigateEvent() = runTest {
         val givenTeam: TeamPresent = faker.randomProvider.randomClassInstance()
 
-        val viewModel = TeamListingViewModel(getAllTeamsUseCase)
+        val viewModel = TeamListingViewModel(getAllTeamsUseCase, dispatcherProvider)
 
         viewModel.observeEvent().test {
             viewModel.onTeamClick(givenTeam)

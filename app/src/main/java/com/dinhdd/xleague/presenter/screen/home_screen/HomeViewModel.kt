@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dinhdd.domain.usecase.GetAllMatchesUseCase
 import com.dinhdd.domain.usecase.GetAllTeamsUseCase
+import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.mapper.toPresent
 import com.dinhdd.xleague.presenter.model.MatchPresent
 import com.dinhdd.xleague.presenter.model.TeamPresent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllTeamsUseCase: GetAllTeamsUseCase,
-    private val getAllMatchesUseCase: GetAllMatchesUseCase
+    private val getAllMatchesUseCase: GetAllMatchesUseCase,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel(), HomeContract.ViewModel {
 
     companion object {
@@ -32,7 +33,7 @@ class HomeViewModel @Inject constructor(
             viewStateFlow.value = HomeContract.ViewState(emptyList(), emptyList(), true)
             getAllTeamsUseCase()
                 .zip(getAllMatchesUseCase()) { teams, matches -> Pair(teams, matches) }
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchData: $error") }
                 .map { (teams, matches) -> teams.map { it.toPresent() } to matches.map { it.toPresent() } }
                 .collect { (teams, matches) ->

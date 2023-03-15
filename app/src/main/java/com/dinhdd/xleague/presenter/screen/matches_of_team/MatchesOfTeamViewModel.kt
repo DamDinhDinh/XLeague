@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dinhdd.domain.usecase.GetAllMatchesOfTeamUseCase
+import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.mapper.toPresent
 import com.dinhdd.xleague.presenter.model.MatchPresent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MatchesOfTeamViewModel @Inject constructor(private val getAllMatchesOfTeamUseCase: GetAllMatchesOfTeamUseCase) :
+class MatchesOfTeamViewModel @Inject constructor(
+    private val getAllMatchesOfTeamUseCase: GetAllMatchesOfTeamUseCase,
+    private val dispatcherProvider: DispatcherProvider
+) :
     ViewModel(), MatchesOfTeamContract.ViewModel {
 
     companion object {
@@ -26,7 +30,7 @@ class MatchesOfTeamViewModel @Inject constructor(private val getAllMatchesOfTeam
     override fun fetchMatchOfTeam(teamId: String) {
         viewModelScope.launch {
             getAllMatchesOfTeamUseCase(teamId)
-                .flowOn(Dispatchers.IO)
+                .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchMatchOfTeam: $error") }
                 .map { matchList -> matchList.map { it.toPresent() } }
                 .collect { matches ->

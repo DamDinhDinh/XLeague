@@ -2,11 +2,11 @@ package com.dinhdd.xleague
 
 import app.cash.turbine.test
 import com.dinhdd.domain.model.Match
-import com.dinhdd.domain.usecase.GetAllMatchesUseCase
+import com.dinhdd.domain.usecase.GetAllMatchesOfTeamUseCase
 import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.model.MatchPresent
-import com.dinhdd.xleague.presenter.screen.match_listing.MatchListingContract
-import com.dinhdd.xleague.presenter.screen.match_listing.MatchListingViewModel
+import com.dinhdd.xleague.presenter.screen.matches_of_team.MatchesOfTeamContract
+import com.dinhdd.xleague.presenter.screen.matches_of_team.MatchesOfTeamViewModel
 import com.dinhdd.xleague.test_base.MainCoroutineRule
 import com.dinhdd.xleague.test_base.TestDispatcherProvider
 import io.github.serpro69.kfaker.Faker
@@ -22,9 +22,9 @@ import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class MatchListingViewModelTest {
+class MatchOfTeamViewModelTest {
     @Mock
-    lateinit var getAllMatchesUseCase: GetAllMatchesUseCase
+    lateinit var getMatchOfTeamUseCase: GetAllMatchesOfTeamUseCase
 
     private lateinit var dispatcherProvider: DispatcherProvider
 
@@ -44,21 +44,20 @@ class MatchListingViewModelTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun fetchAllMatchesThenObserveViewState() = runTest {
+    fun fetchMatchOfTeamThenObserveViewState() = runTest {
         val givenMatches = mutableListOf<Match>().apply {
             repeat(5) {
                 add(faker.randomProvider.randomClassInstance())
             }
         }
 
-        given(getAllMatchesUseCase()).willReturn(flow { emit(givenMatches) })
+        given(getMatchOfTeamUseCase("1")).willReturn(flow { emit(givenMatches) })
 
-        val viewModel = MatchListingViewModel(getAllMatchesUseCase, dispatcherProvider)
-        viewModel.fetchAllMatches()
+        val viewModel = MatchesOfTeamViewModel(getMatchOfTeamUseCase, dispatcherProvider)
+        viewModel.fetchMatchOfTeam("1")
 
-        val value = viewModel.observeViewState().value
-
-        assertEquals(givenMatches.size, value?.matches?.size)
+        val result = viewModel.observeViewState().value
+        assertEquals(givenMatches.size, result?.matches?.size)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -67,14 +66,14 @@ class MatchListingViewModelTest {
         val givenMatch: MatchPresent =
             faker.randomProvider.randomClassInstance<MatchPresent>().copy(matchType = MatchPresent.MatchType.Previous)
 
-        val viewModel = MatchListingViewModel(getAllMatchesUseCase, dispatcherProvider)
+        val viewModel = MatchesOfTeamViewModel(getMatchOfTeamUseCase, dispatcherProvider)
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
-            TestCase.assertTrue(result is MatchListingContract.Event.NavigateMatchHighlight)
+            TestCase.assertTrue(result is MatchesOfTeamContract.Event.NavigateMatchHighlight)
             assertEquals(
                 givenMatch.highlightsUrl,
-                (result as MatchListingContract.Event.NavigateMatchHighlight).match.highlightsUrl
+                (result as MatchesOfTeamContract.Event.NavigateMatchHighlight).match.highlightsUrl
             )
         }
     }
@@ -85,14 +84,14 @@ class MatchListingViewModelTest {
         val givenMatch: MatchPresent =
             faker.randomProvider.randomClassInstance<MatchPresent>().copy(matchType = MatchPresent.MatchType.UpComing)
 
-        val viewModel = MatchListingViewModel(getAllMatchesUseCase, dispatcherProvider)
+        val viewModel = MatchesOfTeamViewModel(getMatchOfTeamUseCase, dispatcherProvider)
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
-            TestCase.assertTrue(result is MatchListingContract.Event.CreateMatchStartingNotification)
+            TestCase.assertTrue(result is MatchesOfTeamContract.Event.CreateMatchStartingNotification)
             assertEquals(
                 givenMatch.date,
-                (result as MatchListingContract.Event.CreateMatchStartingNotification).match.date
+                (result as MatchesOfTeamContract.Event.CreateMatchStartingNotification).match.date
             )
         }
     }

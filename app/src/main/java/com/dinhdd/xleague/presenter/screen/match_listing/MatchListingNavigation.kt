@@ -15,11 +15,11 @@ fun NavGraphBuilder.matchListingFlow(navController: NavHostController) {
         val viewModel: MatchListingViewModel = hiltViewModel()
 
         when (val state = viewModel.observeEvent().collectAsState(initial = null).value) {
-            null -> Unit
             is MatchListingContract.Event.NavigateMatchHighlight -> {
                 val matchUrlEncoded = URLEncoder.encode(state.match.highlightsUrl, StandardCharsets.UTF_8.name())
                 navController.navigateSingleTopTo("${XLeagueDestination.MatchHighlight.name}/${matchUrlEncoded}")
             }
+            else -> Unit
         }
 
         MatchListingScreen(viewModel)
