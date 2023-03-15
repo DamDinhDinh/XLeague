@@ -8,9 +8,16 @@ interface MatchListingContract {
     interface ViewModel {
         fun fetchAllMatches()
 
+        fun onMatchClick(match: MatchPresent)
+
         fun observeViewState(): StateFlow<ViewState?>
+
+        fun observeEvent(): SharedFlow<Event>
     }
 
     data class ViewState(val matches: List<MatchPresent>)
 
+    sealed class Event {
+        data class NavigateMatchHighlight(val match: MatchPresent) : Event()
+    }
 }

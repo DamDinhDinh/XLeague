@@ -18,7 +18,10 @@ fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
     }
     XLeagueTheme {
         state?.let { state ->
-            MatchList(matches = state.matches)
+            MatchList(
+                matches = state.matches,
+                onMatchClick = { match -> viewModel.onMatchClick(match) }
+            )
         }
     }
 }

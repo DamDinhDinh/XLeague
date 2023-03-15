@@ -1,5 +1,6 @@
 package com.dinhdd.xleague.presenter.screen.match_listing.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,7 +12,11 @@ import com.dinhdd.xleague.presenter.model.MatchPresent
 import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
 
 @Composable
-fun MatchList(matches: List<MatchPresent>, modifier: Modifier = Modifier) {
+fun MatchList(
+    matches: List<MatchPresent>,
+    modifier: Modifier = Modifier,
+    onMatchClick: (MatchPresent) -> Unit = {}
+) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(1),
@@ -19,7 +24,10 @@ fun MatchList(matches: List<MatchPresent>, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         content = {
             items(matches.size) { index ->
-                MatchItem(match = matches[index])
+                MatchItem(
+                    match = matches[index],
+                    modifier = Modifier.clickable { onMatchClick(matches[index]) }
+                )
             }
         }
     )

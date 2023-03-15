@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dinhdd.domain.usecase.GetAllMatchesUseCase
 import com.dinhdd.xleague.presenter.mapper.toPresent
+import com.dinhdd.xleague.presenter.model.MatchPresent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -20,6 +21,8 @@ class MatchListingViewModel @Inject constructor(private val getAllMatchesUseCase
     }
 
     private val viewStateFlow = MutableStateFlow<MatchListingContract.ViewState?>(null)
+    private val eventFlow = MutableSharedFlow<MatchListingContract.Event>()
+
 
     override fun fetchAllMatches() {
         viewModelScope.launch {
@@ -34,5 +37,13 @@ class MatchListingViewModel @Inject constructor(private val getAllMatchesUseCase
         }
     }
 
+    override fun onMatchClick(match: MatchPresent) {
+        viewModelScope.launch {
+            eventFlow.emit(MatchListingContract.Event.NavigateMatchHighlight(match))
+        }
+    }
+
     override fun observeViewState(): StateFlow<MatchListingContract.ViewState?> = viewStateFlow.asStateFlow()
+
+    override fun observeEvent(): SharedFlow<MatchListingContract.Event> = eventFlow.asSharedFlow()
 }
