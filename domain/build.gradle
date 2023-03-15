@@ -10,6 +10,10 @@ java {
 
 dependencies {
     testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "io.github.serpro69:kotlin-faker:$faker_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "javax.inject:javax.inject:$java_inject_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
