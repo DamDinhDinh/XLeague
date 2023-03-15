@@ -1,7 +1,8 @@
-package com.dinhdd.xleague.presenter.screen.match_listing.view
+package com.dinhdd.xleague.presenter.screen.home_screen.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
@@ -12,7 +13,7 @@ import com.dinhdd.xleague.presenter.model.MatchPresent
 import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
 
 @Composable
-fun MatchList(
+fun HomeMatchList(
     matches: List<MatchPresent>,
     modifier: Modifier = Modifier,
     onMatchClick: (MatchPresent) -> Unit = {}
@@ -24,9 +25,11 @@ fun MatchList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         content = {
             items(matches.size) { index ->
-                MatchItem(
+                HomeMatchItem(
                     match = matches[index],
-                    modifier = Modifier.clickable { onMatchClick(matches[index]) }
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .clickable { onMatchClick(matches[index]) }
                 )
             }
         }
@@ -35,7 +38,7 @@ fun MatchList(
 
 @Composable
 @Preview
-fun MatchListPreview() {
+fun HomeMatchListPreview() {
     val teamList = listOf(
         MatchPresent(
             date = "2022-04-23T18:00:00.000Z",
@@ -44,7 +47,9 @@ fun MatchListPreview() {
             awayTeam = "Team Red Dragons",
             winner = "Team Red Dragons",
             highlightsUrl = "https://tstzj.s3.amazonaws.com/highlights.mp4",
-            matchType = MatchPresent.MatchType.Previous
+            matchType = MatchPresent.MatchType.Previous,
+            formattedDate = "23 Mar 2022",
+            formattedTime = "18:00"
         ),
         MatchPresent(
             date = "2022-04-23T18:00:00.000Z",
@@ -53,7 +58,9 @@ fun MatchListPreview() {
             awayTeam = "Team Red Dragons",
             winner = "Team Red Dragons",
             highlightsUrl = "https://tstzj.s3.amazonaws.com/highlights.mp4",
-            matchType = MatchPresent.MatchType.Previous
+            matchType = MatchPresent.MatchType.Previous,
+            formattedDate = "23 Mar 2022",
+            formattedTime = "18:00"
         ),
         MatchPresent(
             date = "2022-04-23T18:00:00.000Z",
@@ -62,7 +69,9 @@ fun MatchListPreview() {
             awayTeam = "Team Red Dragons",
             winner = "Team Red Dragons",
             highlightsUrl = "https://tstzj.s3.amazonaws.com/highlights.mp4",
-            matchType = MatchPresent.MatchType.Previous
+            matchType = MatchPresent.MatchType.Previous,
+            formattedDate = "23 Mar 2022",
+            formattedTime = "18:00"
         ),
         MatchPresent(
             date = "2022-04-23T18:00:00.000Z",
@@ -71,11 +80,13 @@ fun MatchListPreview() {
             awayTeam = "Team Red Dragons",
             winner = "Team Red Dragons",
             highlightsUrl = "https://tstzj.s3.amazonaws.com/highlights.mp4",
-            matchType = MatchPresent.MatchType.Previous
+            matchType = MatchPresent.MatchType.Previous,
+            formattedDate = "23 Mar 2022",
+            formattedTime = "18:00"
         )
     )
 
     XLeagueTheme {
-        MatchList(matches = teamList)
+        HomeMatchList(matches = teamList)
     }
 }

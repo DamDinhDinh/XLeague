@@ -2,6 +2,8 @@ package com.dinhdd.xleague.presenter.mapper
 
 import com.dinhdd.domain.model.Match
 import com.dinhdd.xleague.presenter.model.MatchPresent
+import com.dinhdd.xleague.presenter.util.getDateOfMatch
+import com.dinhdd.xleague.presenter.util.getTimeOfMatch
 
 fun Match.toPresent() = MatchPresent(
     date = date,
@@ -10,7 +12,9 @@ fun Match.toPresent() = MatchPresent(
     awayTeam = awayTeam,
     winner = winner,
     highlightsUrl = highlightsUrl,
-    matchType = matchType.toPresent()
+    matchType = matchType.toPresent(),
+    formattedDate = date.getDateOfMatch(),
+    formattedTime = date.getTimeOfMatch()
 )
 
 fun Match.MatchType.toPresent() = when (this) {

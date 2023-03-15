@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.dinhdd.xleague.presenter.screen.team_listing.view.TeamList
-import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
 
 @Composable
 fun TeamListingScreen(viewModel: TeamListingContract.ViewModel) {
@@ -18,15 +16,7 @@ fun TeamListingScreen(viewModel: TeamListingContract.ViewModel) {
         }
     }
 
-    XLeagueTheme {
-        state?.let { state ->
-            TeamList(teams = state.teams, onTeamClick = { team -> viewModel.onTeamClick(team) })
-        }
+    state?.let {
+        TeamList(teams = it.teams, onTeamClick = { team -> viewModel.onTeamClick(team) })
     }
-}
-
-@Composable
-fun TeamListingScreen() {
-    val viewModel: TeamListingViewModel = hiltViewModel()
-    TeamListingScreen(viewModel)
 }

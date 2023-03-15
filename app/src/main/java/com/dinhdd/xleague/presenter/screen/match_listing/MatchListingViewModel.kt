@@ -23,7 +23,6 @@ class MatchListingViewModel @Inject constructor(private val getAllMatchesUseCase
     private val viewStateFlow = MutableStateFlow<MatchListingContract.ViewState?>(null)
     private val eventFlow = MutableSharedFlow<MatchListingContract.Event>()
 
-
     override fun fetchAllMatches() {
         viewModelScope.launch {
             getAllMatchesUseCase()

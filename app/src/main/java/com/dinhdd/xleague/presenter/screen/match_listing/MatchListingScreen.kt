@@ -4,9 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.dinhdd.xleague.presenter.screen.match_listing.view.MatchList
-import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
+import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeMatchList
 
 @Composable
 fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
@@ -16,20 +14,11 @@ fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
             viewModel.fetchAllMatches()
         }
     }
-    XLeagueTheme {
-        state?.let { state ->
-            MatchList(
-                matches = state.matches,
-                onMatchClick = { match -> viewModel.onMatchClick(match) }
-            )
-        }
+
+    state?.let {
+        HomeMatchList(
+            matches = it.matches,
+            onMatchClick = { match -> viewModel.onMatchClick(match) }
+        )
     }
-}
-
-@Composable
-fun MatchListingScreen() {
-    val viewModel: MatchListingViewModel = hiltViewModel()
-
-
-    MatchListingScreen(viewModel)
 }
