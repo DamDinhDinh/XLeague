@@ -12,4 +12,6 @@ ext {
     gson_version = "2.9.0"
     lifecycle_version = "2.5.1"
     compose_version = "1.6.1"
+    mockito_version = "4.4.0"
+    faker_version = "1.14.0-rc.2"
 }

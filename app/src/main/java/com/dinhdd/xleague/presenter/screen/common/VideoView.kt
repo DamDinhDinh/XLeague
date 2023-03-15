@@ -2,9 +2,11 @@ package com.dinhdd.xleague.presenter.screen.common
 
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.FrameLayout
+import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.C
@@ -18,7 +20,7 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSource
 
 @Composable
-fun VideoView(url: String) {
+fun VideoView(url: String, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     val exoPlayer = remember {
@@ -42,18 +44,20 @@ fun VideoView(url: String) {
     exoPlayer.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
     exoPlayer.repeatMode = Player.REPEAT_MODE_ONE
 
-    DisposableEffect(
-        AndroidView(factory = {
-            PlayerView(context).apply {
-                hideController()
-                useController = false
-                resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+    Row(modifier = modifier) {
+        DisposableEffect(
+            AndroidView(factory = {
+                PlayerView(context).apply {
+                    hideController()
+                    useController = false
+                    resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
 
-                player = exoPlayer
-                layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-            }
-        })
-    ) {
-        onDispose { exoPlayer.release() }
+                    player = exoPlayer
+                    layoutParams = FrameLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                }
+            })
+        ) {
+            onDispose { exoPlayer.release() }
+        }
     }
 }

@@ -2,6 +2,8 @@ package com.dinhdd.xleague.presenter.model
 
 data class MatchPresent(
     val date: String,
+    val formattedDate: String,
+    val formattedTime: String,
     val description: String,
     val homeTeam: String,
     val awayTeam: String,

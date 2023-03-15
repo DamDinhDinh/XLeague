@@ -4,28 +4,32 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dinhdd.xleague.presenter.screen.match_listing.view.MatchList
-import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
+import androidx.compose.ui.platform.LocalContext
+import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeMatchList
+import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
 fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
     val state by viewModel.observeViewState().collectAsState()
-    XLeagueTheme {
-        state?.let { state ->
-            MatchList(matches = state.matches)
-        }
-    }
-}
-
-@Composable
-fun MatchListingScreen() {
-    val viewModel: MatchListingContract.ViewModel = viewModel<MatchListingViewModel>()
+    val eventState by viewModel.observeEvent().collectAsState(initial = null)
 
     LaunchedEffect(Unit) {
         if (viewModel.observeViewState().value == null) {
             viewModel.fetchAllMatches()
         }
     }
-    MatchListingScreen(viewModel)
+
+    state?.let {
+        HomeMatchList(
+            matches = it.matches,
+            onMatchClick = { match -> viewModel.onMatchClick(match) }
+        )
+    }
+
+    when (val event = eventState) {
+        is MatchListingContract.Event.CreateMatchStartingNotification -> {
+            NotificationUtils.scheduleMatchStartingNotification(event.match, LocalContext.current)
+        }
+        else -> Unit
+    }
 }

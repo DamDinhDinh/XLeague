@@ -1,10 +1,21 @@
 <resources>
-    <string name="app_name">XLeague</string>
+    <string name="app_name">X League</string>
+
+    <!-- Home Screen-->
+    <string name="home_screen_team_list">Team List</string>
+    <string name="home_screen_match_list">Match List</string>
+
     <string name="all_team_screen_title">All Team</string>
     <string name="all_match_screen_title">All Match</string>
     <string name="match_row_date">Date:</string>
     <string name="match_row_description">Description:</string>
     <string name="match_row_home_team">Home Team:</string>
     <string name="match_row_away_team">Away Team:</string>
-    <string name="match_row_winner_team">Winner Team:</string>
+    <string name="match_row_winner_team">Winner :</string>
+    <string name="match_row_click_to_view_highlight">Click to view highlight!</string>
+    <string name="match_row_click_to_set_notify">Click to set notify!</string>
+
+    <!-- Notification -->
+    <string name="notification_match_starting_channel_name">Match Starting</string>
+    <string name="notification_match_starting_channel_description">This channel for announcement that matches are starting! </string>
 </resources>
