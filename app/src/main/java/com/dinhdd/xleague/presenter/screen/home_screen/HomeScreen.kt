@@ -7,6 +7,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import com.dinhdd.xleague.presenter.screen.common.ScreenConstant.MEDIUM_SCREEN_WIDTH
+import com.dinhdd.xleague.presenter.screen.home_screen.view.LargeScreenHomeContent
+import com.dinhdd.xleague.presenter.screen.home_screen.view.SmallScreenHomeContent
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable

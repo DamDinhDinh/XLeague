@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.dinhdd.xleague.presenter.screen.common.ScreenConstant.MEDIUM_SCREEN_WIDTH
+import com.dinhdd.xleague.presenter.screen.home_screen.view.PreviousUpcomingHorizontalMatchListing
+import com.dinhdd.xleague.presenter.screen.home_screen.view.PreviousUpcomingVerticalMatchListing
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
@@ -27,10 +29,18 @@ fun MatchesOfTeamScreen(viewModel: MatchesOfTeamContract.ViewModel, teamId: Stri
         BoxWithConstraints(modifier = Modifier.padding(top = 24.dp)) {
             when {
                 maxWidth > MEDIUM_SCREEN_WIDTH -> {
-                    LargeScreenMatchOfTeamContent(viewModel = viewModel)
+                    PreviousUpcomingVerticalMatchListing(
+                        previousMatches = it.previousMatches,
+                        upcomingMatches = it.upcomingMatches,
+                        onMatchClick = { match -> viewModel.onMatchClick(match) }
+                    )
                 }
                 else -> {
-                    SmallScreenMatchOfTeamContent(viewModel = viewModel)
+                    PreviousUpcomingHorizontalMatchListing(
+                        previousMatches = it.previousMatches,
+                        upcomingMatches = it.upcomingMatches,
+                        onMatchClick = { match -> viewModel.onMatchClick(match) }
+                    )
                 }
             }
         }
