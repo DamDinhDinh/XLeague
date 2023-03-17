@@ -1,10 +1,11 @@
 package com.dinhdd.xleague.presenter.screen.home_screen.view
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -13,32 +14,43 @@ import com.dinhdd.xleague.presenter.model.MatchPresent
 import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
 
 @Composable
-fun HomeMatchList(
+fun HorizontalHomeMatchList(
     matches: List<MatchPresent>,
     modifier: Modifier = Modifier,
+    label: String = "",
     onMatchClick: (MatchPresent) -> Unit = {}
 ) {
-    LazyVerticalGrid(
-        modifier = modifier,
-        columns = GridCells.Fixed(1),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = {
-            items(matches.size) { index ->
-                HomeMatchItem(
-                    match = matches[index],
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .clickable { onMatchClick(matches[index]) }
+    Surface(modifier = modifier) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            if (label.isNotBlank()) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.body1,
+                    modifier = Modifier.padding(horizontal = 12.dp)
                 )
+                Spacer(modifier = Modifier.size(8.dp))
             }
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 12.dp),
+                content = {
+                    items(matches.size) { index ->
+                        HomeMatchItem(
+                            match = matches[index],
+                            modifier = Modifier
+                                .clickable { onMatchClick(matches[index]) }
+                        )
+                    }
+                }
+            )
         }
-    )
+    }
 }
 
 @Composable
 @Preview
-fun HomeMatchListPreview() {
+fun HorizontalHomeMatchListPreview() {
     val teamList = listOf(
         MatchPresent(
             date = "2022-04-23T18:00:00.000Z",
@@ -87,6 +99,6 @@ fun HomeMatchListPreview() {
     )
 
     XLeagueTheme {
-        HomeMatchList(matches = teamList)
+        HorizontalHomeMatchList(label = "Previous Matches: ", matches = teamList)
     }
 }

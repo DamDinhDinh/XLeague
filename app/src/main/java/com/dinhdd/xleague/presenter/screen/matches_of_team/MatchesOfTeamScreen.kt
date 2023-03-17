@@ -1,11 +1,15 @@
 package com.dinhdd.xleague.presenter.screen.matches_of_team
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeMatchList
+import androidx.compose.ui.unit.dp
+import com.dinhdd.xleague.presenter.screen.common.ScreenConstant.MEDIUM_SCREEN_WIDTH
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
@@ -20,7 +24,16 @@ fun MatchesOfTeamScreen(viewModel: MatchesOfTeamContract.ViewModel, teamId: Stri
     }
 
     state?.let {
-        HomeMatchList(matches = it.matches, onMatchClick = { match -> viewModel.onMatchClick(match) })
+        BoxWithConstraints(modifier = Modifier.padding(top = 24.dp)) {
+            when {
+                maxWidth > MEDIUM_SCREEN_WIDTH -> {
+                    LargeScreenMatchOfTeamContent(viewModel = viewModel)
+                }
+                else -> {
+                    SmallScreenMatchOfTeamContent(viewModel = viewModel)
+                }
+            }
+        }
     }
 
     when (val event = eventState) {

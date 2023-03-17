@@ -30,14 +30,32 @@ class HomeViewModel @Inject constructor(
 
     override fun fetchData() {
         viewModelScope.launch {
-            viewStateFlow.value = HomeContract.ViewState(emptyList(), emptyList(), true)
+            viewStateFlow.value = HomeContract.ViewState(
+                teams = emptyList(),
+                previousMatches = emptyList(),
+                upcomingMatches = emptyList(),
+                isLoading = true
+            )
             getAllTeamsUseCase()
                 .zip(getAllMatchesUseCase()) { teams, matches -> Pair(teams, matches) }
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchData: $error") }
                 .map { (teams, matches) -> teams.map { it.toPresent() } to matches.map { it.toPresent() } }
-                .collect { (teams, matches) ->
-                    viewStateFlow.value = HomeContract.ViewState(teams, matches, false)
+                .map { (teams, matches) ->
+                    HomeContract.ViewState(
+                        teams = teams,
+                        previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
+                        upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType },
+                        isLoading = false
+                    )
+                }
+                .collect { viewState ->
+                    viewStateFlow.value = viewStateFlow.value?.copy(
+                        teams = viewState.teams,
+                        previousMatches = viewState.previousMatches,
+                        upcomingMatches = viewState.upcomingMatches,
+                        isLoading = viewState.isLoading
+                    ) ?: viewState
                 }
         }
     }
@@ -74,7 +92,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    override fun observeViewState(): StateFlow<HomeContract.ViewState?> = viewStateFlow.asStateFlow()
+    override fun observeViewState(): StateFlow<HomeContract.ViewState?> =
+        viewStateFlow.asStateFlow()
 
     override fun observeEvent(): SharedFlow<HomeContract.Event> = eventFlow.asSharedFlow()
 }
