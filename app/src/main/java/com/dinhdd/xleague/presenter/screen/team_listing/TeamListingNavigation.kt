@@ -1,6 +1,6 @@
 package com.dinhdd.xleague.presenter.screen.team_listing
 
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -11,10 +11,15 @@ import com.dinhdd.xleague.presenter.screen.host_screen.navigateSingleTopTo
 fun NavGraphBuilder.teamListingFlow(navController: NavHostController){
     composable(route = XLeagueDestination.TeamListing.name) {
         val viewModel: TeamListingViewModel = hiltViewModel()
-        when (val state = viewModel.observeEvent().collectAsState(initial = null).value) {
-            null -> Unit
-            is TeamListingContract.Event.NavigateTeamMatchesListing -> {
-                navController.navigateSingleTopTo("${XLeagueDestination.MatchOfTeam.name}/${state.teamId}")
+
+        LaunchedEffect(Unit) {
+            viewModel.observeEvent().collect {
+                when (it) {
+                    is TeamListingContract.Event.NavigateTeamMatchesListing -> {
+                        navController.navigateSingleTopTo("${XLeagueDestination.MatchOfTeam.name}/${it.teamId}")
+                    }
+                    else -> Unit
+                }
             }
         }
         TeamListingScreen(viewModel)

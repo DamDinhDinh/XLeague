@@ -19,10 +19,19 @@ import com.dinhdd.xleague.presenter.util.NotificationUtils
 @Composable
 fun HomeScreen(viewModel: HomeContract.ViewModel) {
     val state by viewModel.observeViewState().collectAsState()
-    val eventState by viewModel.observeEvent().collectAsState(initial = null)
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         if (viewModel.observeViewState().value == null) {
             viewModel.fetchData()
+        }
+        viewModel.observeEvent().collect {
+            when (it) {
+                is HomeContract.Event.CreateMatchStartingNotification -> {
+                    NotificationUtils.scheduleMatchStartingNotification(it.match, context)
+                }
+                else -> Unit
+            }
         }
     }
 
@@ -43,12 +52,5 @@ fun HomeScreen(viewModel: HomeContract.ViewModel) {
                 }
             }
         }
-    }
-
-    when (val event = eventState) {
-        is HomeContract.Event.CreateMatchStartingNotification -> {
-            NotificationUtils.scheduleMatchStartingNotification(event.match, LocalContext.current)
-        }
-        else -> Unit
     }
 }
