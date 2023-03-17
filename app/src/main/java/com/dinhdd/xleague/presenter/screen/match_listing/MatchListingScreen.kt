@@ -5,7 +5,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeMatchList
+import com.dinhdd.xleague.presenter.screen.home_screen.view.HorizontalHomeMatchList
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
@@ -20,7 +20,7 @@ fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
     }
 
     state?.let {
-        HomeMatchList(
+        HorizontalHomeMatchList(
             matches = it.matches,
             onMatchClick = { match -> viewModel.onMatchClick(match) }
         )

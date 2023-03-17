@@ -23,7 +23,12 @@ interface HomeContract {
         fun observeEvent(): SharedFlow<Event>
     }
 
-    data class ViewState(val teams: List<TeamPresent>, val matches: List<MatchPresent>, val isLoading: Boolean)
+    data class ViewState(
+        val teams: List<TeamPresent>,
+        val previousMatches: List<MatchPresent>,
+        val upcomingMatches: List<MatchPresent>,
+        val isLoading: Boolean
+    )
 
     sealed class Event {
         data class NavigateMatchHighlight(val match: MatchPresent) : Event()

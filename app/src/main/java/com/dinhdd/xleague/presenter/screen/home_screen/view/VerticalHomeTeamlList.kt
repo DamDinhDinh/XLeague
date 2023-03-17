@@ -2,10 +2,10 @@ package com.dinhdd.xleague.presenter.screen.home_screen.view
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,10 +17,11 @@ import com.dinhdd.xleague.presenter.screen.theme.XLeagueTheme
 private val itemSize = 125.dp
 
 @Composable
-fun HomeTeamList(teams: List<TeamPresent>, modifier: Modifier = Modifier, onTeamClick: (TeamPresent) -> Unit = {}) {
-    LazyRow(
+fun VerticalHomeTeamList(teams: List<TeamPresent>, modifier: Modifier = Modifier, onTeamClick: (TeamPresent) -> Unit = {}) {
+    LazyColumn(
+        contentPadding = PaddingValues(24.dp),
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         content = {
             items(teams.size) { index ->
                 TeamItem(
@@ -35,7 +36,7 @@ fun HomeTeamList(teams: List<TeamPresent>, modifier: Modifier = Modifier, onTeam
 
 @Composable
 @Preview
-fun HomeTeamListPreview() {
+fun VerticalHomeTeamPreview() {
     val teamList = listOf(
         TeamPresent(id = "", name = "Team Red Dragons", logoUrl = "https://tstzj.s3.amazonaws.com/dragons.png"),
         TeamPresent(id = "", name = "Team Cool Eagles", logoUrl = "https://tstzj.s3.amazonaws.com/eagle.png"),
@@ -50,6 +51,6 @@ fun HomeTeamListPreview() {
     )
 
     XLeagueTheme {
-        HomeTeamList(teams = teamList)
+        VerticalHomeTeamList(teams = teamList)
     }
 }
