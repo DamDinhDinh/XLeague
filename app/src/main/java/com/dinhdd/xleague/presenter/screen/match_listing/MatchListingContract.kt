@@ -16,8 +16,9 @@ interface MatchListingContract {
     }
 
     data class ViewState(
-        val previousMatches: List<MatchPresent>,
-        val upcomingMatches: List<MatchPresent>
+        val isLoading: Boolean = false,
+        val previousMatches: List<MatchPresent> = emptyList(),
+        val upcomingMatches: List<MatchPresent> = emptyList()
     )
 
     sealed class Event {

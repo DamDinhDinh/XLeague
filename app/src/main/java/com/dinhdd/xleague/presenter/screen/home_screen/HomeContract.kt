@@ -24,10 +24,10 @@ interface HomeContract {
     }
 
     data class ViewState(
-        val teams: List<TeamPresent>,
-        val previousMatches: List<MatchPresent>,
-        val upcomingMatches: List<MatchPresent>,
-        val isLoading: Boolean
+        val teams: List<TeamPresent> = emptyList(),
+        val previousMatches: List<MatchPresent> = emptyList(),
+        val upcomingMatches: List<MatchPresent> = emptyList(),
+        val isLoading: Boolean = false
     )
 
     sealed class Event {

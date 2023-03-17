@@ -15,7 +15,10 @@ interface TeamListingContract {
         fun observeEvent(): SharedFlow<Event>
     }
 
-    data class ViewState(val teams: List<TeamPresent>)
+    data class ViewState(
+        val isLoading: Boolean = false,
+        val teams: List<TeamPresent> = emptyList()
+    )
 
     sealed class Event {
         data class NavigateTeamMatchesListing(val teamId: String) : Event()

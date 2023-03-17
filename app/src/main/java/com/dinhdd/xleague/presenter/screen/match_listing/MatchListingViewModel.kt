@@ -28,6 +28,7 @@ class MatchListingViewModel @Inject constructor(
 
     override fun fetchAllMatches() {
         viewModelScope.launch {
+            viewStateFlow.value = MatchListingContract.ViewState(isLoading = true)
             getAllMatchesUseCase()
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchAllMatches: $error") }
@@ -35,9 +36,11 @@ class MatchListingViewModel @Inject constructor(
                 .collect { matches ->
                     viewStateFlow.value =
                         viewStateFlow.value?.copy(
+                            isLoading = false,
                             previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
                             upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType },
                         ) ?: MatchListingContract.ViewState(
+                            isLoading = false,
                             previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
                             upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType },
                         )

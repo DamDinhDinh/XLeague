@@ -28,6 +28,7 @@ class MatchesOfTeamViewModel @Inject constructor(
 
     override fun fetchMatchOfTeam(teamId: String) {
         viewModelScope.launch {
+            viewStateFlow.value = MatchesOfTeamContract.ViewState(isLoading = true)
             getAllMatchesOfTeamUseCase(teamId)
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchMatchOfTeam: $error") }
@@ -35,9 +36,11 @@ class MatchesOfTeamViewModel @Inject constructor(
                 .collect { matches ->
                     viewStateFlow.value =
                         viewStateFlow.value?.copy(
+                            isLoading = false,
                             previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
                             upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType }
                         ) ?: MatchesOfTeamContract.ViewState(
+                            isLoading = false,
                             previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
                             upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType }
                         )
