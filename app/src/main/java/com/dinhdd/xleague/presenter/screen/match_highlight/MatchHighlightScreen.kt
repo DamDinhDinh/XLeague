@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets
 fun MatchHighlightScreen(url: String) {
     val urlDecoded = URLDecoder.decode(url, StandardCharsets.UTF_8.name())
 
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(8.dp)) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.padding(vertical = 4.dp)) {
         VideoView(
             modifier = Modifier.align(Alignment.Center),
             url = urlDecoded
