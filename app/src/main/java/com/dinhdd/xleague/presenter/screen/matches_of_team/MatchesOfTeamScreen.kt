@@ -21,11 +21,19 @@ import com.dinhdd.xleague.presenter.util.NotificationUtils
 @Composable
 fun MatchesOfTeamScreen(viewModel: MatchesOfTeamContract.ViewModel, teamId: String) {
     val state by viewModel.observeViewState().collectAsState()
-    val eventState by viewModel.observeEvent().collectAsState(initial = null)
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         if (viewModel.observeViewState().value == null) {
             viewModel.fetchMatchOfTeam(teamId)
+        }
+        viewModel.observeEvent().collect {
+            when (it) {
+                is MatchesOfTeamContract.Event.CreateMatchStartingNotification -> {
+                    NotificationUtils.scheduleMatchStartingNotification(it.match, context)
+                }
+                else -> Unit
+            }
         }
     }
 
@@ -54,12 +62,5 @@ fun MatchesOfTeamScreen(viewModel: MatchesOfTeamContract.ViewModel, teamId: Stri
                 }
             }
         }
-    }
-
-    when (val event = eventState) {
-        is MatchesOfTeamContract.Event.CreateMatchStartingNotification -> {
-            NotificationUtils.scheduleMatchStartingNotification(event.match, LocalContext.current)
-        }
-        else -> Unit
     }
 }

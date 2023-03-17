@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -20,7 +21,7 @@ object NotificationUtils {
 
     fun createMatchStartingNotification(match: MatchPresent, context: Context): Notification {
         return Notification.Builder(context, MATCH_STARTING_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle(match.description)
             .setContentText("${match.description} ${match.formattedDate} ${match.formattedTime}")
             .setAutoCancel(true)
@@ -55,7 +56,7 @@ object NotificationUtils {
                 .addTag(MATCH_STARTING_WORK_TAG)
                 .setInputData(data)
                 .build()
-
+        Toast.makeText(context, "Notify set!", Toast.LENGTH_SHORT).show()
         WorkManager.getInstance(context).enqueue(work)
     }
 }
