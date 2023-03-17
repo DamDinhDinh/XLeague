@@ -1,11 +1,17 @@
 package com.dinhdd.xleague.presenter.screen.match_listing
 
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.dinhdd.xleague.presenter.screen.home_screen.view.HorizontalHomeMatchList
+import androidx.compose.ui.unit.dp
+import com.dinhdd.xleague.presenter.screen.common.ScreenConstant
+import com.dinhdd.xleague.presenter.screen.home_screen.view.PreviousUpcomingHorizontalMatchListing
+import com.dinhdd.xleague.presenter.screen.home_screen.view.PreviousUpcomingVerticalMatchListing
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
@@ -20,10 +26,24 @@ fun MatchListingScreen(viewModel: MatchListingContract.ViewModel) {
     }
 
     state?.let {
-        HorizontalHomeMatchList(
-            matches = it.matches,
-            onMatchClick = { match -> viewModel.onMatchClick(match) }
-        )
+        BoxWithConstraints(modifier = Modifier.padding(top = 24.dp)) {
+            when {
+                maxWidth > ScreenConstant.MEDIUM_SCREEN_WIDTH -> {
+                    PreviousUpcomingVerticalMatchListing(
+                        previousMatches = it.previousMatches,
+                        upcomingMatches = it.upcomingMatches,
+                        onMatchClick = { match -> viewModel.onMatchClick(match) }
+                    )
+                }
+                else -> {
+                    PreviousUpcomingHorizontalMatchListing(
+                        previousMatches = it.previousMatches,
+                        upcomingMatches = it.upcomingMatches,
+                        onMatchClick = { match -> viewModel.onMatchClick(match) }
+                    )
+                }
+            }
+        }
     }
 
     when (val event = eventState) {
