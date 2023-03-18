@@ -41,16 +41,6 @@ fun String.getFormattedTimeOfMatch(): String {
         ?: ""
 }
 
-fun LocalDateTime.timeLeftFromNow(currentTime: Long = System.currentTimeMillis()): Long {
-    val futureTime = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    return futureTime - currentTime
-}
-
-fun String.getTimeLeftOfMatchFromNow(currentTime: Long = System.currentTimeMillis()): Long {
-    val date = this.toLocalDate(MATCH_DATE_PATTERN_SERVER)
-    return date?.timeLeftFromNow(currentTime) ?: throw IllegalArgumentException()
-}
-
 fun String.getDateOfMatchMillisecond(): Long {
     return this
         .toLocalDate(MATCH_DATE_PATTERN_SERVER)

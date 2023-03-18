@@ -106,54 +106,13 @@ class DateUtilsTest {
         assertEquals("", result)
     }
 
-    @Test
-    fun getTimeLeftFromNowThenSuccess() {
-        val localDateTime = LocalDateTime.now()
-        val oneDayLater = localDateTime.plusDays(1)
 
-        val result =
-            oneDayLater.timeLeftFromNow(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
+    @Test
+    fun getDateOfMatchMillisecondThenSuccess() {
+        val stringDate = "2023-03-17T20:00:00.000Z"
+
+        val result = stringDate.getDateOfMatchMillisecond()
         assertNotNull(result)
-        assertEquals(86400000, result)
-    }
-
-    @Test
-    fun getTimeLeftOfMatchFromNowThenSuccess() {
-        val stringDate = "2023-03-19T18:00:00.000Z"
-        val givenYear = 2023
-        val givenMonth = 3
-        val givenDay = 18
-        val givenHour = 18
-        val givenMinute = 0
-        val givenSecond = 0
-        val givenLocalDate = LocalDateTime.of(givenYear, givenMonth, givenDay, givenHour, givenMinute, givenSecond)
-
-
-        val result =
-            stringDate.getTimeLeftOfMatchFromNow(
-                givenLocalDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            )
-        assertNotNull(result)
-        assertEquals(86400000, result)
-    }
-
-    @Test
-    fun getTimeLeftOfMatchFromNowThenFailedException() {
-        val stringDate = "2022-1-29T18:00:00.000Z"
-        val givenYear = 2023
-        val givenMonth = 3
-        val givenDay = 18
-        val givenHour = 18
-        val givenMinute = 0
-        val givenSecond = 0
-        val givenLocalDate = LocalDateTime.of(givenYear, givenMonth, givenDay, givenHour, givenMinute, givenSecond)
-
-        try {
-            stringDate.getTimeLeftOfMatchFromNow(
-                givenLocalDate.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            )
-        } catch (e: Exception) {
-            assertTrue(e is IllegalArgumentException)
-        }
+        assertEquals(1679058000000, result)
     }
 }
