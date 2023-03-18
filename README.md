@@ -9,9 +9,11 @@
 - Used Junit for testing
 - Used Coroutines for performing asynchronous
 - Used Exoplayer for playing highlight video
+- Used AlarmManager and BroadcastReceiver for schedule match starting notifications
+- Change to use vertical lists for devices have screen width > 600 DP
 - ...
-
-- If I have more time, I will implement a cache offline app by Room database. Then refactor the UI/UX. Create a leaderboard feature by counting won matches. After 2 days of creating this sample app, this is a good result for me. I got some new aspects of app development and also reviewed my knowledge
+- Demo video: https://drive.google.com/file/d/19D-9Fn_VTYBmoXS8DLX9VLa8kTrrT0Cj/view?usp=sharing
+- If I have more time, I will implement a cache offline app by Room database. Then refactor the UI/UX. Create a leaderboard feature by counting won matches. After 3 days of creating this sample app, this is a good result for me. I got some new aspects of app development and also reviewed my knowledge.
 
 Functional Requirements:
 - Ability to show all participating teams. -> Landing screen shows a horizontal team list. Click **Team List** label to navigate to the fullscreen all participating teams
@@ -27,5 +29,5 @@ Coding Requirements
 - UI Design must follow Android’s Material Design Guidelines -> Using compose UI with Material Theme. I'm not good at self-design UI/UX app
 - Only use appropriate libraries needed based on the functional requirements -> Meet the requirement
 - Integrate unit tests on the project -> Meet the requirement
-- Support for Tablet design (Bonus) -> X 
+- Support for Tablet design (Bonus) -> Change to use vertical lists for devices have screen width > 600 DP
 - Integrate UI test on the project (Bonus) -> X
