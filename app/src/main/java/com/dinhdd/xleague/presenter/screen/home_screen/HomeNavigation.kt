@@ -1,7 +1,6 @@
 package com.dinhdd.xleague.presenter.screen.home_screen
 
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -11,7 +10,7 @@ import com.dinhdd.xleague.presenter.screen.host_screen.navigateSingleTopTo
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-fun NavGraphBuilder.homeFlow(navController: NavHostController){
+fun NavGraphBuilder.homeFlow(navController: NavHostController) {
     composable(route = XLeagueDestination.HomeScreen.name) {
         val viewModel: HomeViewModel = hiltViewModel()
 

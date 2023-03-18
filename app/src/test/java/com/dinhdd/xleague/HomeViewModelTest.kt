@@ -13,8 +13,7 @@ import com.dinhdd.xleague.presenter.screen.home_screen.HomeViewModel
 import com.dinhdd.xleague.test_base.MainCoroutineRule
 import com.dinhdd.xleague.test_base.TestDispatcherProvider
 import io.github.serpro69.kfaker.Faker
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -56,22 +55,27 @@ class HomeViewModelTest {
                 add(faker.randomProvider.randomClassInstance())
             }
         }
+        val givenPreviousMatchCount = 5
+        val givenUpcomingMatchCount = 5
         val givenMatches = mutableListOf<Match>().apply {
-            repeat(5) {
-                add(faker.randomProvider.randomClassInstance())
+            repeat(givenPreviousMatchCount) {
+                add(faker.randomProvider.randomClassInstance<Match>().copy(matchType = Match.MatchType.Previous))
+            }
+            repeat(givenUpcomingMatchCount) {
+                add(faker.randomProvider.randomClassInstance<Match>().copy(matchType = Match.MatchType.UpComing))
             }
         }
 
         given(getAllTeamsUseCase()).willReturn(flow { emit(givenTeams) })
         given(getAllMatchesUseCase()).willReturn(flow { emit(givenMatches) })
-
         val viewModel = HomeViewModel(getAllTeamsUseCase, getAllMatchesUseCase, dispatcherProvider)
         viewModel.fetchData()
-
         val result = viewModel.observeViewState().value
 
+        assertNotNull(result)
         assertEquals(givenTeams.size, result?.teams?.size)
-        assertEquals(givenMatches.size, result?.matches?.size)
+        assertEquals(givenPreviousMatchCount, result?.previousMatches?.size)
+        assertEquals(givenUpcomingMatchCount, result?.previousMatches?.size)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -84,6 +88,8 @@ class HomeViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onTeamClick(givenTeam)
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is HomeContract.Event.NavigateMatchOfTeam)
             assertEquals(
                 givenTeam.id,
@@ -102,6 +108,8 @@ class HomeViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is HomeContract.Event.NavigateMatchHighlight)
             assertEquals(
                 givenMatch.highlightsUrl,
@@ -120,6 +128,8 @@ class HomeViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is HomeContract.Event.CreateMatchStartingNotification)
             assertEquals(
                 givenMatch.date,
@@ -136,6 +146,8 @@ class HomeViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onTeamListingClick()
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is HomeContract.Event.NavigateTeamListing)
         }
     }
@@ -148,6 +160,8 @@ class HomeViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onMatchListingClick()
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is HomeContract.Event.NavigateMatchListing)
         }
     }

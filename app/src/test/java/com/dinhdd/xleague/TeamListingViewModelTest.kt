@@ -10,8 +10,7 @@ import com.dinhdd.xleague.presenter.screen.team_listing.TeamListingViewModel
 import com.dinhdd.xleague.test_base.MainCoroutineRule
 import com.dinhdd.xleague.test_base.TestDispatcherProvider
 import io.github.serpro69.kfaker.Faker
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+import junit.framework.TestCase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -52,11 +51,11 @@ class TeamListingViewModelTest {
         }
 
         given(getAllTeamsUseCase()).willReturn(flow { emit(givenTeams) })
-
         val viewModel = TeamListingViewModel(getAllTeamsUseCase, dispatcherProvider)
         viewModel.fetchAllTeams()
-
         val result = viewModel.observeViewState().value
+
+        assertNotNull(result)
         assertEquals(givenTeams.size, result?.teams?.size)
     }
 
@@ -70,6 +69,8 @@ class TeamListingViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onTeamClick(givenTeam)
             val result = awaitItem()
+
+            assertNotNull(result)
             assertTrue(result is TeamListingContract.Event.NavigateTeamMatchesListing)
             assertEquals(
                 givenTeam.id,
