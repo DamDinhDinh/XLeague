@@ -10,8 +10,7 @@ import com.dinhdd.xleague.presenter.screen.match_listing.MatchListingViewModel
 import com.dinhdd.xleague.test_base.MainCoroutineRule
 import com.dinhdd.xleague.test_base.TestDispatcherProvider
 import io.github.serpro69.kfaker.Faker
-import junit.framework.TestCase
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
@@ -45,20 +44,26 @@ class MatchListingViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun fetchAllMatchesThenObserveViewState() = runTest {
+        val givenPreviousMatchCount = 5
+        val givenUpcomingMatchCount = 5
         val givenMatches = mutableListOf<Match>().apply {
-            repeat(5) {
-                add(faker.randomProvider.randomClassInstance())
+            repeat(givenPreviousMatchCount) {
+                add(faker.randomProvider.randomClassInstance<Match>().copy(matchType = Match.MatchType.Previous))
+            }
+            repeat(givenUpcomingMatchCount) {
+                add(faker.randomProvider.randomClassInstance<Match>().copy(matchType = Match.MatchType.UpComing))
             }
         }
-
         given(getAllMatchesUseCase()).willReturn(flow { emit(givenMatches) })
 
         val viewModel = MatchListingViewModel(getAllMatchesUseCase, dispatcherProvider)
         viewModel.fetchAllMatches()
 
-        val value = viewModel.observeViewState().value
+        val result = viewModel.observeViewState().value
 
-        assertEquals(givenMatches.size, value?.matches?.size)
+        assertNotNull(result)
+        assertEquals(givenPreviousMatchCount, result?.previousMatches?.size)
+        assertEquals(givenUpcomingMatchCount, result?.previousMatches?.size)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -71,7 +76,9 @@ class MatchListingViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
-            TestCase.assertTrue(result is MatchListingContract.Event.NavigateMatchHighlight)
+
+            assertNotNull(result)
+            assertTrue(result is MatchListingContract.Event.NavigateMatchHighlight)
             assertEquals(
                 givenMatch.highlightsUrl,
                 (result as MatchListingContract.Event.NavigateMatchHighlight).match.highlightsUrl
@@ -89,7 +96,9 @@ class MatchListingViewModelTest {
         viewModel.observeEvent().test {
             viewModel.onMatchClick(givenMatch)
             val result = awaitItem()
-            TestCase.assertTrue(result is MatchListingContract.Event.CreateMatchStartingNotification)
+
+            assertNotNull(result)
+            assertTrue(result is MatchListingContract.Event.CreateMatchStartingNotification)
             assertEquals(
                 givenMatch.date,
                 (result as MatchListingContract.Event.CreateMatchStartingNotification).match.date

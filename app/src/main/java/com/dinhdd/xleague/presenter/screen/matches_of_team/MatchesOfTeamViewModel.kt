@@ -8,7 +8,6 @@ import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.mapper.toPresent
 import com.dinhdd.xleague.presenter.model.MatchPresent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,13 +28,22 @@ class MatchesOfTeamViewModel @Inject constructor(
 
     override fun fetchMatchOfTeam(teamId: String) {
         viewModelScope.launch {
+            viewStateFlow.value = MatchesOfTeamContract.ViewState(isLoading = true)
             getAllMatchesOfTeamUseCase(teamId)
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchMatchOfTeam: $error") }
                 .map { matchList -> matchList.map { it.toPresent() } }
                 .collect { matches ->
                     viewStateFlow.value =
-                        viewStateFlow.value?.copy(matches = matches) ?: MatchesOfTeamContract.ViewState(matches)
+                        viewStateFlow.value?.copy(
+                            isLoading = false,
+                            previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
+                            upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType }
+                        ) ?: MatchesOfTeamContract.ViewState(
+                            isLoading = false,
+                            previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
+                            upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType }
+                        )
                 }
         }
     }
@@ -54,7 +62,8 @@ class MatchesOfTeamViewModel @Inject constructor(
         }
     }
 
-    override fun observeViewState(): StateFlow<MatchesOfTeamContract.ViewState?> = viewStateFlow.asStateFlow()
+    override fun observeViewState(): StateFlow<MatchesOfTeamContract.ViewState?> =
+        viewStateFlow.asStateFlow()
 
     override fun observeEvent(): SharedFlow<MatchesOfTeamContract.Event> = eventFlow.asSharedFlow()
 }

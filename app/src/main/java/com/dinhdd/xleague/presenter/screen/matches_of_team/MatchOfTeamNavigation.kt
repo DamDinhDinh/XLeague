@@ -1,6 +1,6 @@
 package com.dinhdd.xleague.presenter.screen.matches_of_team
 
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -19,12 +19,17 @@ fun NavGraphBuilder.matchOfTeamFlow(navController: NavHostController) {
     ) { navBackStackEntry ->
         val teamId = navBackStackEntry.arguments?.getString("teamId") ?: ""
         val viewModel: MatchesOfTeamViewModel = hiltViewModel()
-        when (val state = viewModel.observeEvent().collectAsState(initial = null).value) {
-            is MatchesOfTeamContract.Event.NavigateMatchHighlight -> {
-                val matchUrlEncoded = URLEncoder.encode(state.match.highlightsUrl, StandardCharsets.UTF_8.name())
-                navController.navigateSingleTopTo("${XLeagueDestination.MatchHighlight.name}/${matchUrlEncoded}")
+
+        LaunchedEffect(Unit) {
+            viewModel.observeEvent().collect {
+                when (it) {
+                    is MatchesOfTeamContract.Event.NavigateMatchHighlight -> {
+                        val matchUrlEncoded = URLEncoder.encode(it.match.highlightsUrl, StandardCharsets.UTF_8.name())
+                        navController.navigateSingleTopTo("${XLeagueDestination.MatchHighlight.name}/${matchUrlEncoded}")
+                    }
+                    else -> Unit
+                }
             }
-            else -> Unit
         }
         MatchesOfTeamScreen(viewModel, teamId)
     }

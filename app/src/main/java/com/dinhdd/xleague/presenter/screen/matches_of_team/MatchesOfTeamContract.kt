@@ -15,7 +15,11 @@ interface MatchesOfTeamContract {
         fun observeEvent(): SharedFlow<Event>
     }
 
-    data class ViewState(val matches: List<MatchPresent>)
+    data class ViewState(
+        val isLoading: Boolean = false,
+        val previousMatches: List<MatchPresent> = emptyList(),
+        val upcomingMatches: List<MatchPresent> = emptyList()
+    )
 
     sealed class Event {
         data class NavigateMatchHighlight(val match: MatchPresent) : Event()

@@ -1,77 +1,56 @@
 package com.dinhdd.xleague.presenter.screen.home_screen
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import com.dinhdd.xleague.R
-import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeMatchList
-import com.dinhdd.xleague.presenter.screen.home_screen.view.HomeTeamList
+import com.dinhdd.xleague.presenter.screen.common.ScreenConstant.MEDIUM_SCREEN_WIDTH
+import com.dinhdd.xleague.presenter.screen.home_screen.view.LargeScreenHomeContent
+import com.dinhdd.xleague.presenter.screen.home_screen.view.SmallScreenHomeContent
 import com.dinhdd.xleague.presenter.util.NotificationUtils
 
 @Composable
 fun HomeScreen(viewModel: HomeContract.ViewModel) {
     val state by viewModel.observeViewState().collectAsState()
-    val eventState by viewModel.observeEvent().collectAsState(initial = null)
+    val context = LocalContext.current
+
     LaunchedEffect(Unit) {
         if (viewModel.observeViewState().value == null) {
             viewModel.fetchData()
         }
+        viewModel.observeEvent().collect {
+            when (it) {
+                is HomeContract.Event.CreateMatchStartingNotification -> {
+                    NotificationUtils.scheduleMatchStartingNotification(it.match, context)
+                }
+                else -> Unit
+            }
+        }
     }
 
     state?.let {
-        when {
-            it.isLoading -> {
-
+        if (it.isLoading) {
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator()
             }
-            else -> {
-                Surface(modifier = Modifier.padding(24.dp)) {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.home_screen_team_list),
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.clickable {
-                                viewModel.onTeamListingClick()
-                            }
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                        HomeTeamList(it.teams, onTeamClick = { team -> viewModel.onTeamClick(team) })
-                        Spacer(modifier = Modifier.size(24.dp))
-                        Text(
-                            text = stringResource(id = R.string.home_screen_match_list),
-                            style = MaterialTheme.typography.h5,
-                            color = MaterialTheme.colors.primary,
-                            modifier = Modifier.clickable {
-                                viewModel.onMatchListingClick()
-                            }
-                        )
-                        Spacer(modifier = Modifier.size(8.dp))
-                        HomeMatchList(
-                            matches = it.matches,
-                            onMatchClick = { match -> viewModel.onMatchClick(match) })
+        } else {
+            BoxWithConstraints {
+                when {
+                    maxWidth > MEDIUM_SCREEN_WIDTH -> {
+                        LargeScreenHomeContent(viewModel = viewModel)
+                    }
+                    else -> {
+                        SmallScreenHomeContent(viewModel = viewModel)
                     }
                 }
             }
         }
-    }
-
-    when (val event = eventState) {
-        is HomeContract.Event.CreateMatchStartingNotification -> {
-            NotificationUtils.scheduleMatchStartingNotification(event.match, LocalContext.current)
-        }
-        else -> Unit
     }
 }

@@ -28,13 +28,20 @@ class TeamListingViewModel @Inject constructor(
 
     override fun fetchAllTeams() {
         viewModelScope.launch {
+            viewStateFlow.value = TeamListingContract.ViewState(isLoading = true)
             getAllTeamsUseCase()
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.d(TAG, "fetchAllTeams: $error") }
                 .map { teamList -> teamList.map { it.toPresent() } }
                 .collect { teams ->
                     viewStateFlow.value =
-                        viewStateFlow.value?.copy(teams = teams) ?: TeamListingContract.ViewState(teams)
+                        viewStateFlow.value?.copy(
+                            isLoading = false,
+                            teams = teams
+                        ) ?: TeamListingContract.ViewState(
+                            isLoading = false,
+                            teams = teams
+                        )
                 }
         }
     }

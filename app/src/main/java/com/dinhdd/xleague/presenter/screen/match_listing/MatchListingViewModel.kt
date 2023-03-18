@@ -8,7 +8,6 @@ import com.dinhdd.xleague.dispatcher.DispatcherProvider
 import com.dinhdd.xleague.presenter.mapper.toPresent
 import com.dinhdd.xleague.presenter.model.MatchPresent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,13 +28,22 @@ class MatchListingViewModel @Inject constructor(
 
     override fun fetchAllMatches() {
         viewModelScope.launch {
+            viewStateFlow.value = MatchListingContract.ViewState(isLoading = true)
             getAllMatchesUseCase()
                 .flowOn(dispatcherProvider.io)
                 .catch { error -> Log.e(TAG, "fetchAllMatches: $error") }
                 .map { matchList -> matchList.map { it.toPresent() } }
                 .collect { matches ->
                     viewStateFlow.value =
-                        viewStateFlow.value?.copy(matches = matches) ?: MatchListingContract.ViewState(matches)
+                        viewStateFlow.value?.copy(
+                            isLoading = false,
+                            previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
+                            upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType },
+                        ) ?: MatchListingContract.ViewState(
+                            isLoading = false,
+                            previousMatches = matches.filter { MatchPresent.MatchType.Previous == it.matchType },
+                            upcomingMatches = matches.filter { MatchPresent.MatchType.UpComing == it.matchType },
+                        )
                 }
         }
     }
