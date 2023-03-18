@@ -50,3 +50,9 @@ fun String.getTimeLeftOfMatchFromNow(currentTime: Long = System.currentTimeMilli
     val date = this.toLocalDate(MATCH_DATE_PATTERN_SERVER)
     return date?.timeLeftFromNow(currentTime) ?: throw IllegalArgumentException()
 }
+
+fun String.getDateOfMatchMillisecond(): Long {
+    return this
+        .toLocalDate(MATCH_DATE_PATTERN_SERVER)
+        ?.atZone(ZoneId.systemDefault())?.toInstant()?.toEpochMilli() ?: 0
+}
