@@ -20,4 +20,5 @@
     <!-- Notification -->
     <string name="notification_match_starting_channel_name">Match Starting</string>
     <string name="notification_match_starting_channel_description">This channel for announcement that matches are starting! </string>
+    <string name="notification_notify_set">Notify set!</string>
 </resources>

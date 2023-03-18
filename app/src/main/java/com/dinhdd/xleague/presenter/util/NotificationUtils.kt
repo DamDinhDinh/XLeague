@@ -4,6 +4,7 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
@@ -15,6 +16,8 @@ import com.google.gson.Gson
 import java.util.concurrent.TimeUnit
 
 object NotificationUtils {
+
+    private const val TAG = "NotificationUtils"
 
     private const val MATCH_STARTING_CHANNEL_ID = "MATCH_STARTING_CHANNEL_ID"
     private const val MATCH_STARTING_WORK_TAG = "MATCH_STARTING_WORK_TAG"
@@ -46,7 +49,14 @@ object NotificationUtils {
     }
 
     fun scheduleMatchStartingNotification(match: MatchPresent, context: Context) {
-        val initialDelay = match.date.getTimeLeftOfMatchFromNow()
+        val initialDelay: Long
+        try {
+            initialDelay = match.date.getTimeLeftOfMatchFromNow()
+        } catch (e: Exception) {
+            Log.e(TAG, "scheduleMatchStartingNotification: ${e.message}")
+            return
+        }
+
         val data = Data.Builder()
             .apply { putString(OneTimeScheduleMatchStaringWorker.MATCH_ARGS_KEY, Gson().toJson(match)) }
             .build()
@@ -56,7 +66,7 @@ object NotificationUtils {
                 .addTag(MATCH_STARTING_WORK_TAG)
                 .setInputData(data)
                 .build()
-        Toast.makeText(context, "Notify set!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.notification_notify_set), Toast.LENGTH_SHORT).show()
         WorkManager.getInstance(context).enqueue(work)
     }
 }

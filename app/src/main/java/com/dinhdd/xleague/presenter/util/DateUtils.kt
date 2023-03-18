@@ -1,46 +1,52 @@
 package com.dinhdd.xleague.presenter.util
 
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
-const val MATCH_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+const val MATCH_DATE_PATTERN_SERVER = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
 
-fun String.stringToDate(pattern: String?): Date? {
+const val MATCH_DATE_PATTERN_SHOW = "dd MMM yyyy"
+const val MATCH_TIME_PATTERN_SHOW = "HH:mm"
+
+fun String.toLocalDate(fromPattern: String?): LocalDateTime? {
     return try {
-        val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
-        simpleDateFormat.parse(this)
+        val formatter = DateTimeFormatter.ofPattern(fromPattern)
+        LocalDateTime.parse(this, formatter)
     } catch (e: Exception) {
         null
     }
 }
 
-fun Date.dateToString(pattern: String?): String? {
+fun LocalDateTime.toString(toPattern: String?): String? {
     return try {
-        val simpleDateFormat = SimpleDateFormat(pattern, Locale.US)
-        simpleDateFormat.format(this)
+        val formatter = DateTimeFormatter.ofPattern(toPattern)
+        this.format(formatter)
     } catch (e: Exception) {
         null
     }
 }
 
-fun String.getDateOfMatch(): String {
-    val date = this.stringToDate(MATCH_DATE_PATTERN)
-    return date?.dateToString("dd MMM yyyy") ?: ""
+fun String.getFormattedDateOfMatch(): String {
+    return this
+        .toLocalDate(fromPattern = MATCH_DATE_PATTERN_SERVER)
+        ?.toString(toPattern = MATCH_DATE_PATTERN_SHOW)
+        ?: ""
 }
 
-fun String.getTimeOfMatch(): String {
-    val date = this.stringToDate(MATCH_DATE_PATTERN)
-    return date?.dateToString("HH:mm") ?: ""
+fun String.getFormattedTimeOfMatch(): String {
+    return this
+        .toLocalDate(fromPattern = MATCH_DATE_PATTERN_SERVER)
+        ?.toString(toPattern = MATCH_TIME_PATTERN_SHOW)
+        ?: ""
 }
 
-fun Date.timeLeftFromNow(): Long {
-    val currentTime = System.currentTimeMillis()
-    val futureTime = this.time
-
+fun LocalDateTime.timeLeftFromNow(currentTime: Long = System.currentTimeMillis()): Long {
+    val futureTime = this.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
     return futureTime - currentTime
 }
 
-fun String.getTimeLeftOfMatchFromNow(): Long {
-    val date = this.stringToDate(MATCH_DATE_PATTERN)
-    return date?.timeLeftFromNow() ?: throw IllegalArgumentException()
+fun String.getTimeLeftOfMatchFromNow(currentTime: Long = System.currentTimeMillis()): Long {
+    val date = this.toLocalDate(MATCH_DATE_PATTERN_SERVER)
+    return date?.timeLeftFromNow(currentTime) ?: throw IllegalArgumentException()
 }
