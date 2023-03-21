@@ -13,6 +13,7 @@
 - Change to use vertical lists for devices have screen width > 600 DP
 - ...
 - Demo video: https://drive.google.com/file/d/19D-9Fn_VTYBmoXS8DLX9VLa8kTrrT0Cj/view?usp=sharing
+- Notification demo in the video scheduled for notify after 30s
 - If I have more time, I will implement a cache offline app by Room database. Then refactor the UI/UX. Create a leaderboard feature by counting won matches. After 3 days of creating this sample app, this is a good result for me. I got some new aspects of app development and also reviewed my knowledge.
 
 Functional Requirements:
