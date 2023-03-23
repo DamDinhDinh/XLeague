@@ -32,3 +32,56 @@ Coding Requirements
 - Integrate unit tests on the project -> Meet the requirement
 - Support for Tablet design (Bonus) -> Change to use vertical lists for devices have screen width > 600 DP
 - Integrate UI test on the project (Bonus) -> X
+
+
+
+Build an Android App for a hypothetical sports event.
+
+
+Functional Requirements:
+
+
+Ability to show all participating teams.
+Ability to show all previous and upcoming matches.
+Ability for a user to select a team and filter matches per team.
+Watch previous match highlights.
+Users can set a reminder for an upcoming match.
+Notify the user when the match is about to start.
+
+Coding Requirements
+
+Application should be written using Kotlin Programming Language
+UI Design must follow Android’s Material Design Guidelines
+Only use appropriate libraries needed based on the functional requirements
+Integrate unit tests on the project
+Support for Tablet design (Bonus)
+Integrate UI test on the project (Bonus)
+
+General Requirements and guidelines:
+
+
+In the application, create a README file and answer the following questions:
+Describe the approach you’ve taken (Architecture, frameworks or libraries used) and explain why you’ve selected it for the sample Android application.
+
+List down any functionalities or technical details that you wanted to add if you had additional time.
+
+Use the following endpoints below for getting the data:
+
+URL
+
+Description
+
+https://jmde6xvjr4.execute-api.us-east-1.amazonaws.com/teams
+
+
+Provides the list of participating teams
+
+https://jmde6xvjr4.execute-api.us-east-1.amazonaws.com/teams/matches
+
+
+Provides the list of matches
+
+https://jmde6xvjr4.execute-api.us-east-1.amazonaws.com/teams/{id}/matches
+
+
+Provides the list of match per team
